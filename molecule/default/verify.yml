@@ -510,11 +510,6 @@
         apisix_molecule_running_version: >-
           {{ apisix_root.server | default('') | regex_replace('^APISIX/', '') | regex_replace('^v', '') | trim }}
 
-    - name: Remove the whoami container
-      ansible.builtin.command:
-        cmd: "docker rm -f {{ apisix_molecule_whoami_identifier }}"
-      changed_when: true
-
     - name: Show the APISIX verification summary
       ansible.builtin.debug:
         msg:
