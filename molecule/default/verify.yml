@@ -498,8 +498,7 @@
     # `/v1/server_info`, which 3.8.0 serves and 3.18.0 answers with a 404.
     #
     # Any leading `v` is normalized
-    # away on both sides, so that this keeps holding if either side ever stops
-    # carrying one.
+    # away on both sides, so that this keeps holding if either side ever changes.
     - name: Assert the running APISIX is the version this role installs
       ansible.builtin.assert:
         that:
