@@ -66,7 +66,7 @@
     - name: Inspect the APISIX container
       ansible.builtin.command:
         cmd: "docker container inspect {{ apisix_defaults.apisix_identifier }}"
-      register: apisix_container_inspect
+      register: apisix_container_raw
       changed_when: false
 
     # Both are read off the running container rather than restated here. The
@@ -77,8 +77,8 @@
     # it is also attached to.
     - name: Determine the image and the container network the role used
       ansible.builtin.set_fact:
-        apisix_molecule_image: "{{ (apisix_container_inspect.stdout | from_json)[0].Config.Image }}"
-        apisix_molecule_network: "{{ (apisix_container_inspect.stdout | from_json)[0].HostConfig.NetworkMode }}"
+        apisix_molecule_image: "{{ (apisix_container_raw.stdout | from_json)[0].Config.Image }}"
+        apisix_molecule_network: "{{ (apisix_container_raw.stdout | from_json)[0].HostConfig.NetworkMode }}"
 
     - name: Remove any leftover stock APISIX container
       ansible.builtin.command:
