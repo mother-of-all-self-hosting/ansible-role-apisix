@@ -96,7 +96,7 @@
     - name: Start a stock APISIX container with no configuration from this role
       ansible.builtin.command:
         cmd: >-
-          docker run --detach
+          docker run -d
           --name={{ apisix_molecule_standalone_identifier }}
           --network={{ apisix_molecule_network }}
           -p 127.0.0.1:{{ apisix_molecule_standalone_admin_bind_port }}:9180
@@ -345,7 +345,7 @@
     - name: Start a whoami container on the APISIX container network
       ansible.builtin.command:
         cmd: >-
-          docker run --detach
+          docker run -d
           --name={{ apisix_molecule_whoami_identifier }}
           --network={{ apisix_molecule_network }}
           docker.io/traefik/whoami:latest
