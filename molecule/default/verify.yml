@@ -17,6 +17,8 @@
     apisix_molecule_metrics_url: "http://127.0.0.1:{{ apisix_molecule_metrics_bind_port }}"
 
   tasks:
+    - name: Verify that APISIX works
+      block:
     # The role is not included in this playbook, so its defaults are not in
     # scope. Reading defaults/main.yml directly ties the version assertion
     # below.
@@ -526,3 +528,19 @@
           - "APISIX bundled dashboard with enable_admin_ui off (/ui, /ui/): {{ apisix_bundled_ui.results | map(attribute='status') | join(', ') }}"
           - "APISIX routing to whoami through the data plane: {{ apisix_whoami_response.status }}"
           - "APISIX metrics (configured URI / APISIX default): {{ apisix_metrics.status }} / {{ apisix_metrics_default_uri.status }}"
+
+      rescue:
+        # Whatever went wrong, the reason is almost always in the systemd service log.
+        - name: Retrieve the APISIX systemd service log
+          ansible.builtin.command:
+            cmd: "journalctl --no-pager --output=cat --unit={{ apisix_defaults.apisix_identifier }}.service"
+          register: apisix_service_log
+          changed_when: false
+
+        - name: Show the APISIX systemd service log
+          ansible.builtin.debug:
+            var: apisix_service_log.stdout_lines
+
+        - name: Fail because verification did not pass
+          ansible.builtin.fail:
+            msg: "APISIX verification failed. The systemd service log is printed above."
