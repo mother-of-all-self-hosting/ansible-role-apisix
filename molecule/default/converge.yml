@@ -46,5 +46,5 @@
 
     - name: Ensure APISIX systemd service is started
       ansible.builtin.systemd_service:
-        name: "{{ apisix_defaults.apisix_identifier }}.service"
+        name: apisix-gateway.service
         state: started

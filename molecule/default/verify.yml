@@ -16,6 +16,10 @@
     apisix_molecule_control_url: "http://127.0.0.1:{{ apisix_molecule_control_bind_port }}"
     apisix_molecule_metrics_url: "http://127.0.0.1:{{ apisix_molecule_metrics_bind_port }}"
 
+    apisix_verify_units:
+      - apisix-gateway.service
+      - etcd.service
+
   tasks:
     - name: Verify that APISIX works
       block:
@@ -27,13 +31,14 @@
             file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
             name: apisix_defaults
 
-        - name: Wait for the APISIX systemd service to become active (up to 180s)
+        - name: Wait for the APISIX systemd services to become active (up to 180s each)
           ansible.builtin.systemd_service:
-            name: "{{ apisix_defaults.apisix_identifier }}.service"
-          register: apisix_service
-          until: apisix_service.status.ActiveState == 'active'
+            name: "{{ item }}"
+          register: apisix_services
+          until: apisix_services.status.ActiveState == 'active'
           retries: 36
           delay: 5
+          loop: "{{ apisix_verify_units }}"
           # So that giving up is reported by the assertion below rather than as a
           # wall of systemd unit properties.
           failed_when: false
@@ -41,17 +46,20 @@
         # `Restart=always` in the systemd unit means that even a container which crashes
         # and gets restarted reads as active here, so this is a precondition rather than
         # a result.
-        - name: Assert the APISIX systemd service is active
+        - name: Assert the APISIX systemd services are active
           ansible.builtin.assert:
-            that: apisix_service.status.ActiveState == 'active'
-            fail_msg: "{{ apisix_defaults.apisix_identifier }}.service is not active ({{ apisix_service.status.ActiveState }})"
-            success_msg: "{{ apisix_defaults.apisix_identifier }}.service is active"
+            that: apisix_services.results | map(attribute='status.ActiveState') | unique | list == ['active']
+            fail_msg: >-
+              Not every service is active:
+              {{ dict(apisix_verify_units | zip(apisix_services.results | map(attribute='status.ActiveState'))) }}
+            success_msg: "Every systemd service is active"
 
-        - name: Retrieve the APISIX systemd service log for debugging
+        - name: Retrieve the APISIX systemd services log for debugging
           when: apisix_debug_service_enabled | bool
           ansible.builtin.command:
-            cmd: "journalctl --no-pager --output=cat --unit={{ apisix_defaults.apisix_identifier }}.service"
+            cmd: "journalctl --no-pager --output=cat --unit={{ item }}"
           changed_when: false
+          loop: "{{ apisix_verify_units }}"
 
         ############################################################
         #                                                          #
@@ -73,7 +81,7 @@
         # role rendered.
         - name: Inspect the APISIX container
           ansible.builtin.command:
-            cmd: "docker container inspect {{ apisix_defaults.apisix_identifier }}"
+            cmd: docker container inspect apisix-gateway
           register: apisix_container_raw
           changed_when: false
 
@@ -521,7 +529,7 @@
         - name: Show the APISIX verification summary
           ansible.builtin.debug:
             msg:
-              - "APISIX systemd: {{ apisix_service.status.ActiveState }}"
+              - "APISIX systemd: {% for unit, state in apisix_verify_units | zip(apisix_services.results | map(attribute='status.ActiveState')) %}{{ unit }} ({{ state }}){% if not loop.last %}, {% endif %}{% endfor %}"
               - "APISIX version (Server header): {{ apisix_root.server | default('unknown') }}"
               - "APISIX data plane (unmatched request): {{ apisix_root.status }}"
               - "APISIX admin API (configured key / wrong key): {{ apisix_admin_routes.status }} / {{ apisix_admin_wrong_key.status }}"
@@ -533,7 +541,7 @@
         # Whatever went wrong, the reason is almost always in the systemd service log.
         - name: Retrieve the APISIX systemd service log
           ansible.builtin.command:
-            cmd: "journalctl --no-pager --output=cat --unit={{ apisix_defaults.apisix_identifier }}.service"
+            cmd: journalctl --no-pager --output=cat --unit=apisix-gateway.service
           register: apisix_service_log
           changed_when: false
 
