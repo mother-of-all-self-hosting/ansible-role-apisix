@@ -31,6 +31,7 @@ provisioner:
       all:
         # Helper variables
         apisix_debug_service_enabled: false
+        apisix_restarts_check_enabled: true
 
         # Names for the containers that verify.yml starts by hand. They embed
         # both the role and the scenario, so that a scenario running next to
