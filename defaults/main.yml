@@ -184,6 +184,12 @@ apisix_container_extra_arguments: "{{ apisix_container_extra_arguments_auto + ap
 apisix_container_extra_arguments_auto: []
 apisix_container_extra_arguments_custom: []
 
+# A list of extra arguments to pass to the process inside the container
+# Example: ['--SOME_ARGUMENT']
+apisix_process_extra_arguments: "{{ apisix_process_extra_arguments_auto + apisix_process_extra_arguments_custom }}"
+apisix_process_extra_arguments_auto: []
+apisix_process_extra_arguments_custom: []
+
 # List of systemd services that the APISIX systemd service depends on
 apisix_systemd_required_services_list: "{{ apisix_systemd_required_services_list_default + apisix_systemd_required_services_list_auto + apisix_systemd_required_services_list_custom }}"
 apisix_systemd_required_services_list_default: "{{ [devture_systemd_docker_base_docker_service_name] if devture_systemd_docker_base_docker_service_name else [] }}"
