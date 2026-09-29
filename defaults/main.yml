@@ -29,7 +29,7 @@ apisix_config_path: "{{ apisix_base_path }}/config"
 # .github/renovate.json additionally tells Renovate to extract the version out
 # of the `-debian` tags; that part cannot be spelled out in this annotation.
 # renovate: datasource=docker depName=apache/apisix versioning=semver
-apisix_version: 3.18.0
+apisix_version: 3.19.0
 
 apisix_uid: ""
 apisix_gid: ""
