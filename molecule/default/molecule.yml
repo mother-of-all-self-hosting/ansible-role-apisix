@@ -91,7 +91,7 @@ provisioner:
         apisix_config_plugin_attr_prometheus_export_uri: /molecule/metrics
 
         apisix_config_deployment_etcd_user: root
-        apisix_config_deployment_etcd_password: "{{ etcd_environment_variable_etcd_root_password }}"
+        apisix_config_deployment_etcd_password: "{{ etcd_auth_provisioning_password }}"
         apisix_config_deployment_admin_admin_key:
           - name: admin_username
             key: "{{ apisix_molecule_admin_key }}"
@@ -135,7 +135,7 @@ provisioner:
         etcd_uid: 1000
         etcd_gid: 1000
         etcd_container_client_communication_bind_port: 2379
-        etcd_environment_variable_etcd_root_password: password
+        etcd_auth_provisioning_password: password
   env:
     # Workaround for https://github.com/ansible/molecule/issues/4391
     ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..:/.ansible/roles:/usr/share/ansible/roles:/etc/ansible/roles:~/.ansible/roles
