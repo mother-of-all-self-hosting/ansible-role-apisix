@@ -157,27 +157,27 @@ traefik.http.routers.{{ apisix_identifier }}-control.tls.certResolver={{ apisix_
 {% endif %}
 
 
-{% if apisix_container_labels_metrics_enabled %}
+{% if apisix_container_labels_traefik_metrics_enabled %}
 ############################################################
 #                                                          #
 # Metrics                                                  #
 #                                                          #
 ############################################################
 
-{% set middlewares = apisix_container_labels_metrics_middlewares %}
+{% set middlewares = apisix_container_labels_traefik_metrics_middlewares %}
 
-{% if apisix_container_labels_metrics_middleware_basic_auth_enabled %}
-traefik.http.middlewares.{{ apisix_identifier }}-metrics-basic-auth.basicauth.users={{ apisix_container_labels_metrics_middleware_basic_auth_users }}
+{% if apisix_container_labels_traefik_metrics_middleware_basic_auth_enabled %}
+traefik.http.middlewares.{{ apisix_identifier }}-metrics-basic-auth.basicauth.users={{ apisix_container_labels_traefik_metrics_middleware_basic_auth_users }}
 {% set middlewares = middlewares + [apisix_identifier + '-metrics-basic-auth'] %}
 {% endif %}
 
 traefik.http.middlewares.{{ apisix_identifier }}-metrics-replace-path.replacepath.path={{ apisix_config_plugin_attr_prometheus_export_uri }}
 {% set middlewares = middlewares + [apisix_identifier + '-metrics-replace-path'] %}
 
-traefik.http.routers.{{ apisix_identifier }}-metrics.rule={{ apisix_container_labels_metrics_rule }}
+traefik.http.routers.{{ apisix_identifier }}-metrics.rule={{ apisix_container_labels_traefik_metrics_rule }}
 
-{% if apisix_container_labels_metrics_priority | int > 0 %}
-traefik.http.routers.{{ apisix_identifier }}-metrics.priority={{ apisix_container_labels_metrics_priority }}
+{% if apisix_container_labels_traefik_metrics_priority | int > 0 %}
+traefik.http.routers.{{ apisix_identifier }}-metrics.priority={{ apisix_container_labels_traefik_metrics_priority }}
 {% endif %}
 
 traefik.http.routers.{{ apisix_identifier }}-metrics.service={{ apisix_identifier }}-metrics
@@ -186,11 +186,11 @@ traefik.http.routers.{{ apisix_identifier }}-metrics.service={{ apisix_identifie
 traefik.http.routers.{{ apisix_identifier }}-metrics.middlewares={{ middlewares | join(',') }}
 {% endif %}
 
-traefik.http.routers.{{ apisix_identifier }}-metrics.entrypoints={{ apisix_container_labels_metrics_entrypoints }}
+traefik.http.routers.{{ apisix_identifier }}-metrics.entrypoints={{ apisix_container_labels_traefik_metrics_entrypoints }}
 
-traefik.http.routers.{{ apisix_identifier }}-metrics.tls={{ apisix_container_labels_metrics_tls | to_json }}
-{% if apisix_container_labels_metrics_tls %}
-traefik.http.routers.{{ apisix_identifier }}-metrics.tls.certResolver={{ apisix_container_labels_metrics_tls_certResolver }}
+traefik.http.routers.{{ apisix_identifier }}-metrics.tls={{ apisix_container_labels_traefik_metrics_tls | to_json }}
+{% if apisix_container_labels_traefik_metrics_tls %}
+traefik.http.routers.{{ apisix_identifier }}-metrics.tls.certResolver={{ apisix_container_labels_traefik_metrics_tls_certResolver }}
 {% endif %}
 
 ############################################################

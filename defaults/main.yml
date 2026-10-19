@@ -153,19 +153,19 @@ apisix_container_labels_control_tls_certResolver: "{{ apisix_container_labels_tr
 
 # Controls if labels are added to expose the Prometheus metrics publicly.
 # Related to: `apisix_config_plugin_attr_prometheus_*`
-apisix_container_labels_metrics_enabled: true
-apisix_container_labels_metrics_hostname: "{{ apisix_hostname }}"
+apisix_container_labels_traefik_metrics_enabled: true
+apisix_container_labels_traefik_metrics_hostname: "{{ apisix_hostname }}"
 # The path prefix must either be `/` or not end with a slash (e.g. `/apisix`).
-apisix_container_labels_metrics_path_prefix: /metrics
-apisix_container_labels_metrics_rule: "Host(`{{ apisix_container_labels_metrics_hostname }}`){% if apisix_container_labels_metrics_path_prefix != '/' %} && PathPrefix(`{{ apisix_container_labels_metrics_path_prefix }}`){% endif %}"
-apisix_container_labels_metrics_priority: 0
-apisix_container_labels_metrics_entrypoints: "{{ apisix_container_labels_traefik_entrypoints }}"
-apisix_container_labels_metrics_middlewares: []
-apisix_container_labels_metrics_tls: "{{ apisix_container_labels_metrics_entrypoints != 'web' }}"
-apisix_container_labels_metrics_tls_certResolver: "{{ apisix_container_labels_traefik_tls_certResolver }}"  # noqa var-naming
-apisix_container_labels_metrics_middleware_basic_auth_enabled: false
+apisix_container_labels_traefik_metrics_path_prefix: /metrics
+apisix_container_labels_traefik_metrics_rule: "Host(`{{ apisix_container_labels_traefik_metrics_hostname }}`){% if apisix_container_labels_traefik_metrics_path_prefix != '/' %} && PathPrefix(`{{ apisix_container_labels_traefik_metrics_path_prefix }}`){% endif %}"
+apisix_container_labels_traefik_metrics_priority: 0
+apisix_container_labels_traefik_metrics_entrypoints: "{{ apisix_container_labels_traefik_entrypoints }}"
+apisix_container_labels_traefik_metrics_middlewares: []
+apisix_container_labels_traefik_metrics_tls: "{{ apisix_container_labels_traefik_metrics_entrypoints != 'web' }}"
+apisix_container_labels_traefik_metrics_tls_certResolver: "{{ apisix_container_labels_traefik_tls_certResolver }}"  # noqa var-naming
+apisix_container_labels_traefik_metrics_middleware_basic_auth_enabled: false
 # See: https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/basicauth/
-apisix_container_labels_metrics_middleware_basic_auth_users: ""
+apisix_container_labels_traefik_metrics_middleware_basic_auth_users: ""
 
 # apisix_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
 # See `../templates/labels.j2` for details.
@@ -337,7 +337,7 @@ apisix_config_plugin_attr_prometheus_export_addr_port: 9091
 # Controls the `plugin_attr.prometheus.export_uri` configuration property.
 #
 # This is the internal metrics path. If exposing via Traefik, this doesn't matter,
-# as metrics are served according to `apisix_container_labels_metrics_path_prefix`.
+# as metrics are served according to `apisix_container_labels_traefik_metrics_path_prefix`.
 apisix_config_plugin_attr_prometheus_export_uri: /apisix/prometheus/metrics
 
 # Default APISIX configuration template which covers the generic use case.

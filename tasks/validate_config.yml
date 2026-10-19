@@ -9,6 +9,14 @@
 # had carried the old prefix, including the ones deprecated before the rename,
 # so there is nothing left for a list of individual renames to catch here.
 
+- name: (Deprecation) Catch and report renamed settings
+  ansible.builtin.fail:
+    msg: |-
+      Please change your configuration file (vars.yml) to rename all `apisix_container_labels_metrics_`-prefixed variables (`apisix_container_labels_metrics_*` -> `apisix_container_labels_traefik_metrics_*`).
+
+      The following variables in your configuration need to be renamed: {{ lookup('ansible.builtin.varnames', '^apisix_container_labels_metrics_.+', wantlist=True) | join(', ') }}
+  when: "lookup('ansible.builtin.varnames', '^apisix_container_labels_metrics_.+', wantlist=True) | length > 0"
+
 - name: Fail if required APISIX settings not defined
   ansible.builtin.fail:
     msg: >-
@@ -23,7 +31,7 @@
     - { "name": "apisix_container_network", "when": true }
     - { "name": "apisix_container_labels_admin_hostname", "when": "{{ apisix_container_labels_admin_enabled }}" }
     - { "name": "apisix_container_labels_control_hostname", "when": "{{ apisix_container_labels_control_enabled }}" }
-    - { "name": "apisix_container_labels_metrics_hostname", "when": "{{ apisix_container_labels_metrics_enabled }}" }
+    - { "name": "apisix_container_labels_traefik_metrics_hostname", "when": "{{ apisix_container_labels_traefik_metrics_enabled }}" }
 
 # We ensure it doesn't end with a slash, because we handle both (slash and no-slash).
 # Knowing that `apisix_path_prefix` does not end with a slash
