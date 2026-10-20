@@ -17,11 +17,11 @@ traefik.http.services.{{ apisix_identifier }}-admin.loadbalancer.server.port={{ 
 traefik.http.services.{{ apisix_identifier }}-metrics.loadbalancer.server.port={{ apisix_config_plugin_attr_prometheus_export_addr_port }}
 
 {% if apisix_container_labels_gateway_enabled %}
-############################################################
-#                                                          #
-# Gateway                                                  #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# Gateway                                                              #
+#                                                                      #
+########################################################################
 
 {% set middlewares = apisix_container_labels_gateway_middlewares %}
 
@@ -55,20 +55,20 @@ traefik.http.routers.{{ apisix_identifier }}-gateway.tls={{ apisix_container_lab
 traefik.http.routers.{{ apisix_identifier }}-gateway.tls.certResolver={{ apisix_container_labels_gateway_tls_certResolver }}
 {% endif %}
 
-############################################################
-#                                                          #
-# /Gateway                                                 #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# /Gateway                                                             #
+#                                                                      #
+########################################################################
 {% endif %}
 
 
 {% if apisix_container_labels_admin_enabled %}
-############################################################
-#                                                          #
-# Admin                                                    #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# Admin                                                                #
+#                                                                      #
+########################################################################
 
 {% set middlewares = apisix_container_labels_admin_middlewares %}
 
@@ -102,20 +102,20 @@ traefik.http.routers.{{ apisix_identifier }}-admin.tls={{ apisix_container_label
 traefik.http.routers.{{ apisix_identifier }}-admin.tls.certResolver={{ apisix_container_labels_admin_tls_certResolver }}
 {% endif %}
 
-############################################################
-#                                                          #
-# /Admin                                                   #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# /Admin                                                               #
+#                                                                      #
+########################################################################
 {% endif %}
 
 
 {% if apisix_container_labels_control_enabled %}
-############################################################
-#                                                          #
-# Control                                                  #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# Control                                                              #
+#                                                                      #
+########################################################################
 
 {% set middlewares = apisix_container_labels_control_middlewares %}
 
@@ -149,20 +149,20 @@ traefik.http.routers.{{ apisix_identifier }}-control.tls={{ apisix_container_lab
 traefik.http.routers.{{ apisix_identifier }}-control.tls.certResolver={{ apisix_container_labels_control_tls_certResolver }}
 {% endif %}
 
-############################################################
-#                                                          #
-# /Control                                                 #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# /Control                                                             #
+#                                                                      #
+########################################################################
 {% endif %}
 
 
 {% if apisix_container_labels_traefik_metrics_enabled %}
-############################################################
-#                                                          #
-# Metrics                                                  #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# Metrics                                                              #
+#                                                                      #
+########################################################################
 
 {% set middlewares = apisix_container_labels_traefik_metrics_middlewares %}
 
@@ -193,11 +193,11 @@ traefik.http.routers.{{ apisix_identifier }}-metrics.tls={{ apisix_container_lab
 traefik.http.routers.{{ apisix_identifier }}-metrics.tls.certResolver={{ apisix_container_labels_traefik_metrics_tls_certResolver }}
 {% endif %}
 
-############################################################
-#                                                          #
-# /Metrics                                                 #
-#                                                          #
-############################################################
+########################################################################
+#                                                                      #
+# /Metrics                                                             #
+#                                                                      #
+########################################################################
 {% endif %}
 
 {% endif %}
