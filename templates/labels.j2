@@ -26,7 +26,7 @@ traefik.http.services.{{ apisix_identifier }}-metrics.loadbalancer.server.port={
 {% set middlewares = apisix_container_labels_gateway_middlewares %}
 
 {% if apisix_container_labels_gateway_path_prefix != '/' %}
-traefik.http.middlewares.{{ apisix_identifier }}-gateway-slashless-redirect.redirectregex.regex=^({{ apisix_container_labels_gateway_path_prefix | quote }})$
+traefik.http.middlewares.{{ apisix_identifier }}-gateway-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ apisix_container_labels_gateway_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ apisix_identifier }}-gateway-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [apisix_identifier + '-gateway-slashless-redirect'] %}
 {% endif %}
@@ -73,7 +73,7 @@ traefik.http.routers.{{ apisix_identifier }}-gateway.tls.certResolver={{ apisix_
 {% set middlewares = apisix_container_labels_admin_middlewares %}
 
 {% if apisix_container_labels_admin_path_prefix != '/' %}
-traefik.http.middlewares.{{ apisix_identifier }}-admin-slashless-redirect.redirectregex.regex=^({{ apisix_container_labels_admin_path_prefix | quote }})$
+traefik.http.middlewares.{{ apisix_identifier }}-admin-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ apisix_container_labels_admin_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ apisix_identifier }}-admin-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [apisix_identifier + '-admin-slashless-redirect'] %}
 {% endif %}
@@ -120,7 +120,7 @@ traefik.http.routers.{{ apisix_identifier }}-admin.tls.certResolver={{ apisix_co
 {% set middlewares = apisix_container_labels_control_middlewares %}
 
 {% if apisix_container_labels_control_path_prefix != '/' %}
-traefik.http.middlewares.{{ apisix_identifier }}-control-slashless-redirect.redirectregex.regex=^({{ apisix_container_labels_control_path_prefix | quote }})$
+traefik.http.middlewares.{{ apisix_identifier }}-control-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ apisix_container_labels_control_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ apisix_identifier }}-control-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [apisix_identifier + '-control-slashless-redirect'] %}
 {% endif %}
