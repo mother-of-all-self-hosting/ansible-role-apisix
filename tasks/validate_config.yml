@@ -17,6 +17,17 @@
       The following variables in your configuration need to be renamed: {{ lookup('ansible.builtin.varnames', '^apisix_container_labels_metrics_.+', wantlist=True) | join(', ') }}
   when: "lookup('ansible.builtin.varnames', '^apisix_container_labels_metrics_.+', wantlist=True) | length > 0"
 
+# APISIX 3.20.0 removes this plugin. The plugin list is part of the
+# user-supplied APISIX configuration and cannot be migrated by the role.
+- name: Fail if the removed mcp-bridge plugin is enabled
+  ansible.builtin.fail:
+    msg: >-
+      APISIX 3.20.0 no longer includes the `mcp-bridge` plugin. Remove it from
+      `plugins` in your APISIX configuration. `openapi-to-mcp` supports
+      OpenAPI-described HTTP APIs; it is not a replacement for arbitrary
+      stdio MCP servers.
+  when: "'mcp-bridge' in (apisix_config.plugins | default([]))"
+
 - name: Fail if required APISIX settings not defined
   ansible.builtin.fail:
     msg: >-
