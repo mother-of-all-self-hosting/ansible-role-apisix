@@ -34,12 +34,8 @@
       You need to define a required configuration setting (`{{ item.name }}`).
   when: "item.when | bool and lookup('vars', item.name, default='') | string | length == 0"
   with_items:
-    - { "name": "apisix_identifier", "when": true }
     - { "name": "apisix_uid", "when": true }
     - { "name": "apisix_gid", "when": true }
-    - { "name": "apisix_hostname", "when": true }
-    - { "name": "apisix_path_prefix", "when": true }
-    - { "name": "apisix_container_network", "when": true }
     - { "name": "apisix_container_labels_admin_hostname", "when": "{{ apisix_container_labels_admin_enabled }}" }
     - { "name": "apisix_container_labels_control_hostname", "when": "{{ apisix_container_labels_control_enabled }}" }
     - { "name": "apisix_container_labels_traefik_metrics_hostname", "when": "{{ apisix_container_labels_traefik_metrics_enabled }}" }
